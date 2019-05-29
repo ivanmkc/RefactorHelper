@@ -3,6 +3,7 @@ import { readFileSync, writeFileSync, fstat, rename, renameSync } from "fs";
 const readdir = require("recursive-readdir");
 const rootDirectory = "/Users/ivan_cheung/code/apps/ios/lib/AirbnbIdentity/AirbnbIdentity/ChinaIdentityVerification/"
 const path = require('path')
+const shouldReplaceFilenames = false
 
 async function run() {
 	let files: string[] = await readdir(rootDirectory)
@@ -26,24 +27,22 @@ async function run() {
 		});
 	});
 
-	// Rename all filenames
-	files.forEach(filePath => {
-		let fullDirectory = path.dirname(filePath)
-		let fileName = path.basename(filePath)
-		let fileNameSplit = fileName.split(".")
-		
-		let match = allTypes.find(x => x == fileNameSplit[0])
-
-		if (match) {
-			let replacement = `${match}Legacy`
+	if (shouldReplaceFilenames) {
+		// Rename all filenames
+		files.forEach(filePath => {
+			let fullDirectory = path.dirname(filePath)
+			let fileName = path.basename(filePath)
+			let fileNameSplit = fileName.split(".")
+			
+			let replacement = `${fileName}Legacy`
 			let remainingPartsOfFileName = fileNameSplit.slice(1)
 			let newFileName = replacement + "." + remainingPartsOfFileName
 			let newFilePath = path.join(fullDirectory, newFileName)
 			renameSync(filePath, newFilePath)
 
 			console.log(`Renamed ${filePath} to ${newFilePath}!`)
-		}
-	})
+		})
+	}
 
 	console.log("Done!")
 }
