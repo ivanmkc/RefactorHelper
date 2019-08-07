@@ -63,7 +63,7 @@ function findAll(regexPattern, sourceString, filePath) {
     let output = []
     let match
     // make sure the pattern has the global flag
-	let regexPatternWithGlobal = RegExp(regexPattern,"g")
+	let regexPatternWithGlobal = RegExp(regexPattern,"gm")
 	
 	console.log(`Parsing ${filePath}`)
     while (match = regexPatternWithGlobal.exec(sourceString)) {
@@ -86,7 +86,7 @@ function FindTypes(filePath: string): Set<string> {
 ​
 	let matches = keywords
 		.map(x => {
-			let regexString = `${x}\\s([a-zA-Z]+)[:|\\s\{]`
+			let regexString = `^[a-zA-Z\\s]*?${x}\\s([a-zA-Z]+)[:|\\s\{]`
 			let regex = new RegExp(regexString, "g");
 			return new Set<string>(
 					findAll(regex, text, filePath)
